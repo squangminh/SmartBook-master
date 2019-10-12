@@ -67,7 +67,7 @@ namespace AdwardSoft.Web.Inside.Controllers
         #endregion
 
         [HttpGet]
-        public async Task<IActionResult> _BookForm(int id)
+        public async Task<IActionResult> _BookForm(int id) 
         {
             try
             {
