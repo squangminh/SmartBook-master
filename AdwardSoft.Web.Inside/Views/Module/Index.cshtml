@@ -1,0 +1,143 @@
+﻿@model List<AdwardSoft.Web.Inside.Models.ModuleViewModel>
+@{
+    ViewData["Title"] = "Module";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section StyleSheet{
+    <link href="~/lib/MenuTable/menutable.css" rel="stylesheet" />
+}
+
+    <div class="row">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body" id="Form"></div>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card" style="margin-bottom:unset !important">
+                <div class="card-body" id="menu-Table">
+                    <ads-Module ads-data="@Model" ads-name="Module/_Form" ads-detail="true"></ads-Module>
+                </div>
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <a href="#" onclick="Sort()" class="btn btn-sm btn-maven"><i class="fa fa-refresh ml-1 mr-1"></i>Cập nhật vị trí</a>
+                    </div>
+                </div>
+                <div class="clear-fix"></div>
+            </div>
+
+        </div>
+        
+    </div>
+
+@section Scripts {
+    <script src="~/lib/MenuTable/jquery.menutable.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadFindId(0)
+        $('#menutable').menutable();
+        })
+
+        var rebindValidation = function () {
+            $('form').each(function (i, f) {
+                $form = $(f);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+            });
+        }
+
+    function loadFindId(id) {
+        $.ajax({
+                    url: "@Url.Action("_Form", "Module")",
+                    method: "GET",
+                    data: { "id": id },
+                    success: function (data) {
+                        $("#Form").empty();
+                        $("#Form").html(data);
+                        $('.select').select2({
+                            minimumResultsForSearch: Infinity
+                        });
+                    }
+                });
+        }
+
+        function Collapse(id) {
+            var div = $(".mn-handle-details[data-id='handleCollapse-" + id + "']")
+            div.removeClass("show");
+            div.one("transitionend", function () {
+                div.empty();
+            });
+        }
+
+        function Submit(action, id) {
+            if ($("#_FormView-" + id).valid()) {
+               var data = $("#menutable .mn-handle span").filter(function () { return $(this).text().toLowerCase() == $("#_FormView-" + id + " #Title").val() });
+                var check = data.length > 0 && action.toLowerCase() == "create" ? 0 : 1;
+                check = Number($(data).parents("li.mn-item").data("id")) !== id && data.length > 0 && action.toLowerCase() == "update" ? 0 : 1
+
+                if (check) {
+                    var data = $("#_FormView-" + id).serializeArray()
+                    data.push({ name: "ParentId", value: $("#ParentId").val() })
+                    $.ajax({
+                        url: "Module/" + action,
+                        method: "POST",
+                        displaysetings: {
+                            success: false,
+                            error: true,
+                            showIndicator: true,
+                            hideIndicator: true
+                        },
+                        data: data,
+                        success: function (data) {
+                            if (data.succeeded)
+                                setTimeout(function () { location.reload(); }, 500)
+                        }
+                    })
+                }
+                else {
+                    swal({
+                        title: 'Error',
+                        text: "Tiêu đề đã được sử dụng",
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            }
+            
+        }
+
+        function Sort() {
+            var json = $('.mn').menutable('serialize');
+            $.ajax({
+                url: "@Url.Action("Sort", "Module")",
+                            method: "POST",
+                            data: { "json": JSON.stringify(json) },
+                            dataType: "json",
+                            success: function (data) {
+                                swal({
+                                    title: "Thành công!",
+                                    text: "Sắp xếp thành công",
+                                    type: "success"
+                                }).then(function (check) {
+                                    if (check.value) {
+                                        location.reload();
+                                    }
+                                })
+                            },
+                            error: function (error) {
+                                swal({
+                                    title: "Lỗi!",
+                                    text: "Sắp xếp thất bại",
+                                    type: "warning"
+                                });
+                            }
+                        });
+        }
+
+        var moduleSuccess = function () {
+            location.reload();
+        }
+    </script>
+}

@@ -1,0 +1,114 @@
+﻿[node-id] rect {
+    fill: #1C2D59;
+}
+
+div[data-item='add'], div[data-item='details'], div[data-item='edit'], div[data-item='remove'] {
+    width: 7rem;
+}
+
+    div[data-item='add'] svg, div[data-item='details'] svg, div[data-item='edit'] svg, div[data-item='remove'] svg {
+        float: left;
+    }
+
+div[data-id='cell-1'] input {
+    padding-top: 6px !important;
+}
+
+g[control-add="control-add"] {
+    display: none;
+}
+
+div[data-id="search-icon"].hidden {
+    display: none;
+}
+
+#ads-detail-panel {
+    width: 0;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    opacity: 1;
+    overflow: hidden;
+    text-align: left;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    -webkit-transition: width 0.25s;
+    -moz-transition: width 0.25s;
+    -ms-transition: width 0.25s;
+    -o-transition: width 0.25s;
+    transition: width 0.25s;
+}
+
+    #ads-detail-panel.show {
+        width: 400px;
+        border-left: 1px solid rgb(215, 215, 215);
+    }
+
+.ads-detail-employee {
+    width: 100%;
+}
+
+    .ads-detail-employee div[data-item='close'] {
+        background-color: #1C2D59;
+        min-height: 50px;
+        text-align: center;
+        position: relative;
+        width: 100%;
+    }
+.ads-card {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.ads-card-body {
+    max-height: 40.3rem;
+    overflow: auto;
+}
+
+.ads-employee-tilte {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+}
+
+.ads-employee-tilte:hover {
+    background-color: #ccc;
+}
+
+.ads-card-search {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: rgba(0,0,0,.02);
+    border-bottom: 1px solid #ddd;
+}
+
+.ads-input-group {
+    position: relative;
+    width:100%;
+}
+
+.ads-input-icon {
+    position: absolute;
+    z-index: 999;
+    width: 2rem;
+    height: 36px;
+    padding: 0.5rem 0.75rem;
+}
+
+.ads-input{
+    padding-left:2rem;
+}
+
+.ads-employee-position {
+    position: absolute;
+    top: 35%;
+    right: 5px;
+}
+.ads-form-check {
+    display: block;
+}

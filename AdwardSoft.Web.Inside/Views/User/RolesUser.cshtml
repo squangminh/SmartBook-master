@@ -1,0 +1,125 @@
+﻿@*@model List<AdwardSoft.Web.Inside.Models.RolesUserViewModel>*@
+@{
+    ViewData["Title"] = "Quyền người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-5">
+        <div class="card" id="formRolesUser">
+        </div>
+    </div>
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">Danh sách người dùng và quyền</h5>
+            </div>
+            <div class="card-body">
+                <table id="RolesUserTable" class="table datatable-save-state" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th class="text-center">Họ tên</th>
+                            <th class="text-center">Quyền</th>
+                            <th width="10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/lib/nestable/jquery.nestable.js"></script>
+    <script>
+        var rebindValidation = function () {
+            $('form').each(function (i, f) {
+                $form = $(f);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+            });
+        }
+
+         $(document).ready(function () {
+             var RolesUserAction = $.templates("#RolesUserAction");
+             var $RolesUserTable = $("#RolesUserTable").DataTable({
+                processing: true,
+                responsive: true,
+                ajax: function (data, callback, settings) {
+                    $.ajax({
+                        url: "@Url.Action("ReadRolesUser", "User")",
+                        method: "GET",
+                        success: function (response) {
+                            callback({ data: response });
+                        }
+                    });
+                 },
+                 columnDefs: [
+                     {
+                         "targets": [0],
+                         "visible": false,
+                         "searchable": false
+                     }
+
+                 ],
+                pageLength: 5,
+                paging: true,
+                 cache: false,
+                 lengthChange: false,
+                 search: false,
+                 filter: false,
+                 columns: [
+                     { "data": "userId" },
+                     { "data": "fullName" },
+                     { "data": "rolesOfUser" },
+                    {
+                        data: { id: "userId" },
+                        "render": function (data, type, row) {
+
+                            return (RolesUserAction.render({ data: data }));;
+                        }
+                    },
+                ],
+                 language: {
+                     info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                     paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                     processing: "",
+                     infoEmpty: "",
+                     emptyTable: "không có dữ liệu"
+                 }
+             });
+
+             //$('#newRolesUser ').on('click', function () {
+             //    loadFindId(0);
+             //});
+
+
+             loadFindId($("#UserId").val());
+        });
+
+        function loadFindId(id) {
+                $.ajax({
+                    url: "@Url.Action("_RoleUserForm", "User")",
+                    method: "GET",
+                    data: { "userId": id },
+                    success: function (data) {
+                        $("#formRolesUser").empty();
+                        $("#formRolesUser").html(data);
+                        setTimeout(rebindValidation, 500);
+                    }
+                });
+        }
+
+        var UserRoleSuccess = function () {
+            $('#RolesUserTable').DataTable().ajax.reload();
+            loadFindId(0);
+        }
+    </script>
+    <script id="RolesUserAction" type="text/x-jsrender">
+        <div class="list-icons">
+            <a href="#" checkvalidate="false" id="editRolesUser" onclick="loadFindId({{:data.userId}});" callbackFn="UserRoleSuccess()" class="list-icons-item"><i class="icon-pencil7 "></i></a>
+            <a href="#" class="list-icons-item"><i data-action="/User/DeleteRoleUser" callbackfn="UserRoleSuccess()" class="icon-trash remove-item" data-params='{"id":"{{:data.userId}}"}'></i></a>
+        </div>
+    </script>
+}

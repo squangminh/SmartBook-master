@@ -1,0 +1,4 @@
+﻿CREATE TYPE [dbo].[IntList] AS TABLE
+(
+	Id INT PRIMARY KEY NOT NULL, Name VARCHAR(128)
+)

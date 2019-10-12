@@ -1,0 +1,18 @@
+﻿CREATE PROCEDURE [dbo].[usp_Role_User_Create]
+	@Id INT,
+	@UserId BIGINT,
+	@Name NVARCHAR(30)
+AS
+BEGIN 
+	BEGIN TRY
+		BEGIN TRAN
+			INSERT INTO [dbo].[UserRole] ([RoleId], [UserId])
+			VALUES (@Id, @UserId);
+		COMMIT
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN
+		THROW
+	END CATCH
+	
+END

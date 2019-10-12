@@ -1,0 +1,45 @@
+﻿@model AdwardSoft.Web.Inside.Models.GenreViewModel
+<form class="form-validate-jquery form-content" id="_Form" asp-action="@ViewBag.Action" asp-controller="Genre" callbackfn="GenrePage.success()" method="post">
+    <div class="modal-header">
+        @if (Model.Id == 0)
+        {
+            <h5 class="modal-title">Thêm thể loại truyện </h5>
+        }
+        else
+        {
+            <h5 class="modal-title">Chỉnh sửa thể loại truyện </h5>
+        }
+    </div>
+    <div class="modal-body row">
+
+        <input hidden asp-for="@Model.Id" type="text" class="form-control" required>
+
+        <div class="form-group col-md-12">
+            <label class="clear-fix font-weight-semibold" asp-for="Name"></label>
+            <input asp-for="@Model.Name" type="text" class="form-control" required>
+            <span asp-validation-for="@Model.Name" class="validation-invalid-label"></span>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="clear-fix font-weight-semibold" asp-for="Description"></label>
+            <textarea asp-for="@Model.Description" type="text" rows="4" class="form-control" ></textarea>
+            <span asp-validation-for="@Model.Description" class="validation-invalid-label"></span>
+        </div>
+    </div>
+    <div class="modal-footer" style="position: relative">
+        @if (Model.Id == 0)
+        {
+
+            <a href="#" onclick="GenrePage.DisplayEditForm(0)" class="btn btn-sm btn-light">Hủy bỏ <i class="icon-cross2 mr-1"></i></a>
+            @*<button onclick="checkImage()" style="margin-right:0" type="button" class="btn btn-success ml-1 btn-sm">Thêm mới <i class="icon-checkmark ml-1"></i></button>
+            <button hidden type="submit" class="btn btn-success ml-1 btn-sm submitFormGenre">Lưu<i class="icon-checkmark ml-1"></i></button>*@
+            <button type="submit" class="btn btn-success ml-1 btn-sm submitFormRenovation"> Thêm mới <i class="fa fa-check ml-1"></i></button>
+        }
+        else
+        {
+            <a href="#" onclick="GenrePage.DisplayEditForm(0)" class="btn btn-sm btn-light">Hủy bỏ <i class="icon-cross2 mr-1"></i></a>
+            @*<button type="button" onclick="checkImage()" style="margin-right:0" class="btn btn-success ml-1 btn-sm ">Cập nhật <i class="icon-checkmark ml-1"></i></button>
+            <button hidden type="submit" class="btn btn-success ml-1 btn-sm submitFormGenre">Lưu<i class="icon-checkmark ml-1"></i></button>*@
+            <button type="submit" class="btn btn-success ml-1 btn-sm submitFormRenovation"> Cập nhật <i class="fa fa-check ml-1"></i></button>
+        }
+    </div>
+</form>

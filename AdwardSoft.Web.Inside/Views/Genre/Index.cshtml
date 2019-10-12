@@ -1,0 +1,215 @@
+﻿@{
+    ViewData["Title"] = "Thể loại truyện";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-5">
+        <div class="card" id="_Form"></div>
+    </div>
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="font-weight-bold">
+                    Danh sách thể loại truyện
+                </h5>
+            </div>
+            <div class="card-body">
+                <table id="ads-table" class="table datatable-save-state" data-id="1" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">Tên thể loại</th>
+                            <th class="text-center">Miêu tả</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="Action" type="text/x-jsrender">
+        <div class="list-icons">
+            @*<a class="list-icons-item" data-toggle="tooltip"  href="#"><i class="icon-info22"></i></a>*@
+            <a data-toggle="tooltip" title="Chi tiết" href="#" onclick="GenrePage.DisplayEditForm({ 'id': {{: data.id }} })" class="list-icons-item"><i class="icon-pencil7"></i></a>
+            <a data-toggle="tooltip" title="Xóa" href="#" class="list-icons-item"><i class="icon-trash remove-item" callbackfn="GenrePage.success()" data-action="/Genre/Delete" data-params='{"id":"{{:data.id}}"}'></i></a>
+        </div>
+    </script>
+
+
+    <script>
+        var Genre = (function (rqdata) {
+
+            var Table = function (rqdata) {
+                var d = $.Deferred();
+                $.ajax({
+                    url: "@Url.Action("Read", "Genre")",
+                    method: "GET",
+                    success: function (result) {
+                        d.resolve(result);
+                    },
+                    error: function () {
+                        d.reject();
+                    }
+                });
+                return d.promise();
+            }
+
+            var FormEdit = function (rqdata) {
+                var d = $.Deferred();
+                $.ajax({
+                    url: "@Url.Action("_GenreForm", "Genre")",
+                    method: "GET",
+                    data: {
+                        "id": rqdata.id,
+                    },
+                    success: function (result) {
+                        d.resolve(result);
+                    },
+                    error: function () {
+                        d.reject();
+                    }
+                });
+                return d.promise();
+            }
+
+           
+            return {
+                table: Table,
+                formEdit: FormEdit
+            }
+
+        })()
+
+        var GenrePage = (function (Genre) {
+
+            var rqdata = {}
+            var adsTable
+            var Action = $.templates("#Action");
+            var ActionSort = $.templates("#ActionSort");
+
+            var DisplayTable = function () {
+                    adsTable = $("#ads-table").DataTable({
+                        processing: true,
+                        responsive: true,
+                        ajax: function (data, callback, settings) {
+                         Genre.table(rqdata).done(function (data) {
+                            callback({ data: data });
+                        })
+                    },
+                        pageLength: 5,
+                        paging: true,
+                        cache: false,
+                        lengthChange: false,
+                        columns: [
+                            { data: "name" },
+                            { data: "description" },
+
+                            //{
+                            //    data: "id",
+                            //    render: function (data, type, row) {
+                            //        return (Action.render({ id: data }))
+                            //    },
+                            //},
+                            {
+                                data: "",
+                                render: function (data, type, row) {
+                                    return (Action.render({ data: row }))
+                                },
+                            }
+                        ],
+                        columnDefs: [
+                            {
+                                targets: [1],
+                                render: function (data, type, row) {
+                                    if (data.length > 55) {
+                                        return data.split(' ').slice(0, 6).join(' ') + ".....";
+                                    }
+
+                                    else
+                                        return data;
+                                }
+                            }
+                        ],
+                        order: [[0, "asc"]],
+                        language: {
+                            //search: '<div class="row"><div class="col-md-auto"><a href="/Book/_Form" modal-size="modal-lg" callbackfn="BookPage.success()" class="btn btn-sm btn-primary modal-link"><i class="fa fa-plus mr-1"></i>Thêm truyện</a></div><div class="col-md-6">_INPUT_</div></div>',
+                            search: '_INPUT_',
+                            searchPlaceholder: 'Gõ để tìm kiếm...',
+                            infoFiltered: "",
+                            info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                            paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                            processing: "Xin chờ ít phút",
+                            infoEmpty: "",
+                            emptyTable: "Không có dữ liệu",
+                            zeroRecords: "Không tìm thấy",
+                            infoFiltered: ""
+                        }
+                    });
+            }
+
+            var DisplayEditForm = function (rqdata) {
+                Genre.formEdit(rqdata).done(function (result) {
+                    $("#_Form").html(result);
+                    validate();
+                })
+            }
+
+
+            var success = function () {
+                $("#ads-table").DataTable().ajax.reload();
+                DisplayEditForm(rqdata);
+                validate();
+                //location.reload();
+            }
+
+            var initEvent = function () {
+                //$(document).on("click", ".ads-sort", function () {
+                //    rqdata = $(this).data();
+                //    Genre.eventSort(rqdata).done(function (result) {
+                //        success();
+                //    })
+                //})
+
+                // $(document).on("change", "#ads-type", function () {
+                //     rqdata["type"] = Number($(this).val());
+                //     $("#title").text($(this).find(":selected").text())
+                //     success();
+                // })
+            }
+
+            var validate = function () {
+                $('form').each(function (i, f) {
+                    $form = $(f);
+                    $form.removeData('validator');
+                    $form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse($form);
+                });
+
+                $('.select').select2({minimumResultsForSearch: -1})
+                $('.form-check-input-switch').bootstrapSwitch();
+            }
+
+            var init = function () {
+                rqdata = {id: 0}
+                DisplayTable(rqdata);
+                DisplayEditForm(rqdata);
+                initEvent()
+            }
+
+            return {
+                DisplayTable: DisplayTable,
+                DisplayEditForm: DisplayEditForm,
+                init: init,
+                success: success
+            }
+
+        })(Genre)
+
+        GenrePage.init();
+
+    </script>
+
+}

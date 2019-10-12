@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Xác thực email</title>
+</head>
+<body class="bg-slate-custom">
+    <!-- Page content -->
+    <div class="page-content">
+
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Content area -->
+            <div class="content d-flex justify-content-center align-items-center">
+
+                <!-- Email Confirm card -->
+                <form id="fEConfirm" class="login-form" asp-action="EmailConfirm" asp-controller="User" method="post" enctype="multipart/form-data">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <i class="icon-reading icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"></i>
+                                <h5 class="mb-0">Xác thực email</h5>
+                            </div>
+                            <span class="text-danger">@ViewBag.MsgInfo</span>
+                            <a class="link" href="/User/Login">Đăng nhập</a>
+                        </div>
+                    </div>
+                </form>
+                <!-- /login card -->
+
+            </div>
+            <!-- /content area -->
+
+        </div>
+        <!-- /main content -->
+
+    </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        $("#fEConfirm").submit();
+    })
+</script>

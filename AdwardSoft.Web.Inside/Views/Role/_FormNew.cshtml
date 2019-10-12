@@ -1,0 +1,77 @@
+﻿@model AdwardSoft.Web.Inside.Models.UserRoleViewModel
+
+<form class="form-validate-jquery form-content" id="_FormView" callbackfn="RoleSuccess()" method="post">
+    <div class="modal-header">
+        @if (Model.Id == 0)
+        {
+            <h5 class="modal-title">Tạo mới quyền sử dùng</h5>
+        }
+        else
+        {
+            <h5 class="modal-title">Cập nhât quyền sử dụng</h5>
+            <input type="text" hidden value="@Model.Id" asp-for="@Model.Id" />
+        }
+    </div>
+    <div class="modal-body row">
+        <div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Tên</label>
+            <input type="text" asp-for="@Model.Name" value="@Model.Name" class="form-control" />
+            <span asp-validation-for="@Model.Name" class="validation-invalid-label"></span>
+        </div>
+        <div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Tên thường gọi</label>
+            <input type="text" asp-for="@Model.NormalizedName" value="@Model.NormalizedName" class="form-control" />
+            <span asp-validation-for="@Model.NormalizedName" class="validation-invalid-label"></span>
+        </div>
+        @*<div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Chưa có tên</label>
+            <input type="text" asp-for="@Model.ConcurrencyStamp" value="@Model.ConcurrencyStamp" class="form-control" />
+            <span asp-validation-for="@Model.ConcurrencyStamp" class="validation-invalid-label"></span>
+        </div>*@
+        <div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Quyền sử dụng</label>
+            <select multiple="multiple" asp-for="@Model.Permissions" class="form-control select select-search" asp-items="@ViewBag.Select"></select>
+        </div>
+        @if (!ViewBag.IsDefault)
+        {
+            <div class="col-md-12">
+                <label class="clear-fix font-weight-semibold" style="margin:auto 0">Mặc định &nbsp;</label>
+                <div class="form-check form-check-switch form-check-switch-left">
+                    <label class="form-check-label d-flex align-items-center">
+                        <input asp-for="@Model.IsDefault" type="checkbox" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+                    </label>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="display: none;">
+                <input asp-for="@Model.IsDefault" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+            </div>
+            
+        }
+    </div>
+    <div class="modal-footer">
+        @if (Model.Id == 0)
+        {
+            <a href="#" onclick="ReadById(0)" class="btn btn-light ml-1 btn-sm">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            <button type="button" onclick="submitForm('Create')" style="margin-right:0" class="btn btn-maven ml-1 btn-sm">Thêm mới <i class="icon-checkmark"></i></button>
+
+        }
+        else
+        {
+            <a href="#" onclick="ReadById(0)" class="btn btn-light ml-1 btn-sm">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            <button type="button" onclick="submitForm('Update')" style="margin-right:0" class="btn btn-maven ml-1 btn-sm">Cập nhật <i class="icon-checkmark"></i></button>
+        }
+    </div>
+</form>
+
+<script>
+    //$(document).ready(function () {
+    //    setTimeout(rebindValidation, 500);
+    //});
+    function submitForm(str) {
+        $("#_FormView").attr("action", "/Role/" + str);
+        $("#_FormView").submit();
+    }
+</script>

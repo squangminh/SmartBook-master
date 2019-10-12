@@ -1,0 +1,177 @@
+﻿@inject AdwardSoft.Provider.Common.IUserSession userSession;
+@model List<AdwardSoft.Web.Inside.Models.UserInfoViewModel>
+
+@{
+    ViewData["Title"] = "Tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section StyleSheet {
+    <style>
+        #UserTable_filter label::after {
+            content: '' !important
+        }
+    </style>
+}
+
+<div class="row">
+
+    <div id="listUser" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Danh sách thành viên</h5>
+                <div class="clear-fix form-group"></div>
+                @*<div class="float-right">
+                    <div class="row">
+                        <div class="col-md-auto">
+                            <select class="form-control select" asp-items="Html.GetEnumSelectList<EUserType>()" onchange="UserSuccess()" id="Select"></select>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+            <div class="card-body">
+                <table id="UserTable" class="table datatable-save-state" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th class="text-center" width="15%">Ảnh đại diện</th>
+                            <th class="text-center" width="25%">Họ và tên</th>
+                            <th class="text-center" width="20%">Email</th>
+                            <th class="text-center" width="15%">Số điện thoại</th>
+                            <th class="text-center" width="15%">Loại thành viên</th>
+                            <th width="10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Scripts{
+    
+    <script>
+        $('.select').select2({
+            minimumResultsForSearch: Infinity
+        });
+
+        var rebindValidation = function () {
+            $('form').each(function (i, f) {
+                $form = $(f);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+            });
+        }
+
+        $(document).ready(function () {
+             var UserAction = $.templates("#UserAction");
+             var $UserTable = $("#UserTable").DataTable({
+                processing: true,
+                responsive: true,
+                scrollX: true,
+                ajax: function (data, callback, settings) {
+                    $.ajax({
+                        url: "@Url.Action("Read", "User")",
+                        data: { 
+                            "Id": Number($("#Select").val())
+                        },
+                        method: "GET",
+                        success: function (response) {
+                            callback({ data: response });
+                        }
+                    });
+                 },
+                 columnDefs: [
+                     {
+                         "targets": [0],
+                         "visible": false,
+                         "searchable": false
+                     },
+                     { className: "text-center", targets: 1 }
+                 ],
+                pageLength: 5,
+                paging: true,
+                 cache: false,
+                 lengthChange: false,
+                 columns: [
+                     { "data": "id" },
+                     {
+                         "data": "avatar",
+                         "render": function (data, type, row) {
+                             if (data != null)
+                                 return '<img src="../../upload/Images/Avatar/' + data + '" class="rounded-circle" width="40" height="40" alt="">';
+                             else
+                                 return data;
+                         }
+                     },
+                    { "data": "fullName" },
+                    { "data": "email" },
+                    { "data": "phoneNumber" },
+                    {
+                        "data": "type",
+                        "render": function (data, type, row) {
+                            switch (data) {
+                                case 1:
+                                    return "Nội bộ";
+                                    break;
+                                case 2:
+                                    return "Khách hàng";
+                                    break;
+                                case 3:
+                                    return "Tài xế";
+                                    break;
+                                 case 4:
+                                    return "Lái xe hộ";
+                                    break;
+                            }
+                        }
+                    },
+                    {
+                        data: { id: "id" },
+                        "render": function (data, type, row) {
+
+                            return (UserAction.render({ data: data }));;
+                        }
+                    },
+                ],
+                 language: {
+                     search: '<div class="row col-md-12>"><div class="col-md-auto"><a href="/User/_UserForm" id="newUser"  modal-size="modal-md" checkvalidate="true" callbackFn="UserSuccess()" class="btn btn-sm btn-primary modal-link"><i class="icon-plus22 mr-1"></i>Thêm thành viên</a></div><div class="col-md-4"><span class="icon-data-table"></span>_INPUT_</div></div>',
+                     searchPlaceholder: 'Gõ để tìm kiếm...',
+                     info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                     paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                     processing: "",
+                     infoEmpty: "",
+                     zeroRecords: "không có dữ liệu",
+                     infoFiltered: "",
+                 }
+             });
+        });
+
+        $('#Select').on('change', function () {
+            $("#newUser").removeAttr("data-params");
+            var type = $(this).val();
+            var dataparams = '{ "type":' + type + ' }';
+            $("#newUser").data("params", { "type": type })
+        });
+        
+        var UserSuccess = function () {
+            $('#UserTable').DataTable().ajax.reload();
+        }
+    </script>
+}
+
+<script id="UserAction" type="text/x-jsrender">
+    <div class="list-icons">
+        <a href="/chi-tiet-nhan-vien/{{:data.id}}" class="list-icons-item"><i class="icon-user"></i></a>
+        <a href="@Url.Action("_ChangePasswordForm","User")" callbackFn="UserSuccess()" data-params='{"id":"{{:data.id}}"}' class="list-icons-item modal-link"><i class="icon-lock "></i></a>
+        <a href="@Url.Action("_UserForm","User")" callbackFn="UserSuccess()" data-params='{"id":"{{:data.id}}"}' modal-size="modal-md" class="list-icons-item modal-link"><i class="icon-pencil7 "></i></a>
+        {{if data.id !== @userSession.UserId}}
+        <a href="#" class="list-icons-item"><i data-action="/User/Delete" callbackfn="UserSuccess()" class="icon-trash remove-item" data-params='{"id":"{{:data.id}}"}'></i></a>
+        {{else}}
+        <a href="#" class="list-icons-item disabled-item"><i class="icon-trash"></i></a>
+        {{/if}}
+    </div>
+</script>
+

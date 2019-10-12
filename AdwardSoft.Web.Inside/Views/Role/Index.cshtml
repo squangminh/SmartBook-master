@@ -1,0 +1,113 @@
+﻿@model AdwardSoft.Web.Inside.Models.UserRoleViewModel;
+@{
+    ViewData["Title"] = "Quyền Người dùng";
+}
+
+<div class="row">
+    <div class="col-5">
+        <div class="card" id="_Form">
+            @await Html.PartialAsync("~/Views/Role/_FormNew.cshtml", Model);
+        </div>
+    </div>
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">Danh sách quyền người dùng</h5>
+            </div>
+            <div class="card-body">
+                <table id="roleTable" class="table datatable-save-state" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Tên quyền</th>
+                            <th width="5%"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script id="roleAction" type="text/x-jsrender">
+        <div class="list-icons">
+            <a onclick="ReadById('{{:id}}')" class="list-icons-item"><i class="icon-pencil7 "></i></a>
+            <a href="#" class="list-icons-item"><i data-action="/Role/Delete" callbackfn="RoleSuccess()" class="icon-trash remove-item" data-params='{"id":"{{:id}}"}'></i></a>
+        </div>
+    </script>
+
+    <script>
+        var rebindValidation = function () {
+            $('form').each(function (i, f) {
+                $form = $(f);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+            });
+            $('.select').select2({
+                minimumResultsForSearch: Infinity
+            });
+            $('.select-search').select2();
+            $('.form-check-input-switch').bootstrapSwitch();
+        };
+        
+        var roleAction = $.templates("#roleAction");
+        var $roleTable = $("#roleTable").DataTable({
+            ajax: function (data, callback, settings) {
+                $.ajax({
+                    url: "@Url.Action("Read", "Role")",
+                    method: "GET",
+                    success: function (response) {
+                        callback({ data: response });
+                    }
+                });
+            },
+            pageLength: 5,
+            paging: true,
+            cache: false,
+            lengthChange: false,
+            filter: false,
+            search: false,
+            columns: [
+                { "data": "name" },
+                {
+                    "data": "id" ,
+                    "render": function (data, type, row) {
+                        return (roleAction.render({ id: data }));
+                    }
+                },
+            ],
+            language: {
+                info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                processing: "",
+                infoEmpty: "",
+                emptyTable: "không có dữ liệu"
+            }
+        });
+
+        function ReadById(id) {
+            $.ajax({
+                url: "@Url.Action("_FormNew", "Role")",
+                method: "GET",
+                data: { "id": id },
+                success: function (data) {
+                    $("#_Form").empty();
+                    $("#_Form").html(data);
+                    setTimeout(rebindValidation, 500);
+                }
+            });
+        };
+
+        var RoleSuccess = function () {
+            $roleTable.ajax.reload();
+            ReadById(0)
+        };
+
+        $(document).ready(function() {
+            setTimeout(rebindValidation, 500);
+        });
+    </script>
+}

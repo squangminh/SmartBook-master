@@ -1,0 +1,4 @@
+﻿Install-Package Serilog.AspNetCore -DependencyVersion Highest
+Install-Package Serilog.Sinks.Console
+Install-Package Serilog.Sinks.File
+Install-Package Serilog.Settings.Configuration -Version 3.0.1

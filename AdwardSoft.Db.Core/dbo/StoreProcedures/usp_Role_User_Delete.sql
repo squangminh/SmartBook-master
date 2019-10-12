@@ -1,0 +1,19 @@
+﻿CREATE PROCEDURE [dbo].[usp_Role_User_Delete]
+	@Id BIGINT
+AS
+BEGIN 
+DECLARE @res AS INT = 1
+	BEGIN TRY
+		BEGIN TRAN
+			DELETE	[dbo].[UserRole]
+			WHERE	[UserId] = @Id
+		COMMIT
+		--RETURN 1
+	END TRY
+	BEGIN CATCH
+		SET @res = 0
+		ROLLBACK TRAN
+		THROW
+	END CATCH
+	SELECT @res
+END

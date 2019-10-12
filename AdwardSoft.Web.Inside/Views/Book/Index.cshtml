@@ -1,0 +1,235 @@
+﻿@{
+    ViewData["Title"] = "Books";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-header header-elements-inline">
+            <h4 class="font-weight-bold">
+                Danh sách truyện
+            </h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-auto">
+                <a href="/Book/_BookForm" style="line-height:24px;" checkvalidate="true" modal-size="modal-lg" callbackfn="BookPage.success()" class="btn btn-sm btn-primary modal-link"><i class="fa fa-plus mr-1"></i>Thêm mới</a>
+            </div>
+            <div class="col-md-6" style="position: relative;">
+                <input type="text" class="form-control ads-search-value" placeholder="Tìm kiếm theo tên..." />
+                <span class="icon-search4 ads-icon-search"></span>
+            </div>
+        </div>
+        <table id="ads-table" class="table datatable-save-state">
+            <thead>
+                <tr>
+                    <th class="w-25">Tên</th>
+                    <th class="w-40">Miêu tả</th>
+                    <th class="w-25">Ngày tạo</th>
+                    <th class="w-10"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script id="Action" type="text/x-jsrender">
+        <div class="list-icons">
+            <a href="@Url.Action("_BookForm","Book")" modal-size="modal-lg" class="list-icons-item modal-link" callbackFn="BookPage.success()" data-params='{"Id":{{:data.id}}}'><i class="icon-pencil7"></i></a>
+            <a href="#" class="list-icons-item"><i class="icon-trash remove-item" callbackfn="BookPage.success()" data-action="/Book/Delete" data-params='{"id":{{:data.id}}, "Url": "{{:data.image}}"}'></i></a>
+        </div>
+    </script>
+
+    <script>
+        var Book = (function (rqdata) {
+
+            var Table = function (rqdata) {
+                var d = $.Deferred();
+                $.ajax({
+                    url: "@Url.Action("ReadPagination", "Book")",
+                    method: "POST",
+                    data: rqdata,
+                    success: function (result) {
+                        d.resolve(result);
+                    },
+                    error: function () {
+                        d.reject();
+                    }
+                });
+                return d.promise();
+            }
+
+            var FormLang = function (rqdata) {
+                var d = $.Deferred();
+                $.ajax({
+                    url: "@Url.Action("ReadByLang", "Book")",
+                    method: "GET",
+                    data: rqdata,
+                    success: function (result) {
+                        d.resolve(result);
+                    },
+                    error: function () {
+                        d.reject();
+                    }
+                });
+                return d.promise();
+            }
+
+            return {
+                table: Table,
+                formLang: FormLang
+            }
+
+        })()
+
+        var BookPage = (function (Book) {
+
+            var rqdata = {}
+            var adsTable
+            var Action = $.templates("#Action");
+
+            var DisplayTable = function () {
+                    adsTable = $("#ads-table").DataTable({
+                        processing: true,
+                        responsive: true,
+                        ajax: function (data, callback, settings) {
+                            rqdata["model"] = data;
+                            Book.table(rqdata).done(function (response) {
+                                callback({ data: response.data, draw: response.draw, recordsFiltered: response.recordsFiltered, recordsTotal: response.recordsTotal });
+                            });
+                        },
+                        pageLength: 5,
+                        filter: true,
+                        serverSide: true,
+                        lengthChange: false,
+                        paging: true,
+                        cache: false,
+                        searching: false,
+                        columns: [
+                            { data: "name" },
+                            { data: "description" },
+                            { data: "dateShow" },
+                            {
+                                data: {},
+                                "render": function (data, type, row) {
+                                    return (Action.render({ data: data }));
+                                }
+                            }
+                            ],
+                        columnDefs: [
+                            {
+                                targets: [2],
+                                render: function (data, type, row) {
+                                    if (data.length > 55) {
+                                        return data.split(' ').slice(0, 6).join(' ') + ".....";
+                                    }
+
+                                    else
+                                        return data;
+                                }
+                            }, {
+                                targets: [3],
+                                orderable: false
+                            }
+                        ],
+                        language: {
+                            //search: '<div class="row"><div class="col-md-auto"><a href="/Book/_Form" modal-size="modal-lg" callbackfn="BookPage.success()" class="btn btn-sm btn-primary modal-link"><i class="fa fa-plus mr-1"></i>Thêm truyện</a></div><div class="col-md-6">_INPUT_</div></div>',
+                            search: '',
+                            searchPlaceholder: '',
+                            infoFiltered: "",
+                            info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                            paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                            processing: "Xin chờ ít phút",
+                            infoEmpty: "",
+                            emptyTable: "Không có dữ liệu",
+                            zeroRecords: "Không tìm thấy",
+                            infoFiltered: ""
+                        }
+                    });
+            }
+
+            var success = function () {
+                $("#ads-table").DataTable().ajax.reload();
+                validate();
+            }
+
+            var initEvent = function () {
+
+                //$(document).on("change", "#LanguageCode", function () {
+                //    rqdata["Id"] = Number($("#BookId").val());
+                //    rqdata["Lang"] = $(this).val();
+                //    Book.formLang(rqdata).done(function (result) {
+                //        $("#Title").val(result.tittle);
+                //        $("#Description").val(result.description);
+                //        //$("#BookContent").val(result.BookContent === null ? "" : result.BookContent);
+                //        tinymce.get('BookContent').setContent(result.BookContent === null ? "" : result.BookContent)
+                //    })
+                //})
+
+                $(document).on("change", "#ImageFile", function (e) {
+                    $("#fileName").val(e.target.files[0].name);
+                    $("#Image").val(e.target.files[0].name);
+                });
+            }
+
+            var validate = function () {
+               $('form').each(function (i, f) {
+                    $form = $(f);
+                    $form.removeData('validator');
+                    $form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse($form);
+                });
+
+                $('.select').select2()
+                $('.form-check-input-switch').bootstrapSwitch();
+
+                if (tinymce.editors.length > 0) {
+                    tinymce.remove("textarea#Description");
+                }
+                initTINYMCE("Description");
+
+                $('.daterange-single').daterangepicker({
+                    singleDatePicker: true,
+                    timePicker: false,
+                    locale: {
+                        format: 'MM-DD-YYYY'
+                    }, autoclose: true,
+                    yearPicker: true
+                });
+            }
+
+            var submit = function () {
+                tinyMCE.triggerSave();
+                if ($("#_Form").valid()) {
+                    $("#_Form").submit();
+                }
+            }
+
+            var init = function () {
+                DisplayTable(rqdata);
+                initEvent();
+                validate();
+            }
+
+            return {
+                DisplayTable: DisplayTable,
+                init: init,
+                success: success,
+                validate: validate,
+                submit: submit,
+                initEvent: initEvent
+            }
+
+        })(Book)
+
+        BookPage.init();
+
+    </script>
+
+}
+
+

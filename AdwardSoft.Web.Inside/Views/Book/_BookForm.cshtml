@@ -1,0 +1,149 @@
+﻿@model AdwardSoft.Web.Inside.Models.BookViewModel
+@{
+    var action = ViewBag.Action;
+}
+<style>
+
+    #fileLoad {
+        height: 300px;
+        max-height: 300px;
+        overflow-y: scroll;
+        margin: 25px;
+    }
+
+    .it .btn-orange {
+        background-color: blue;
+        border-color: #777 !important;
+        color: #777;
+        text-align: left;
+        width: 100%;
+    }
+
+    .it input.form-control {
+        border: none;
+        margin-bottom: 0px;
+        border-radius: 0px;
+        border-bottom: 1px solid #ddd;
+        box-shadow: none;
+    }
+
+    .it .form-control:focus {
+        border-color: #ff4d0d;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .fileUpload input.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+    /*.checkbox-inline {
+        position: relative !important;
+        padding-left: 28px !important;
+    }*/
+</style>
+
+
+<form class="form-validate-jquery" enctype="multipart/form-data" id="_Form" asp-action="@action" asp-controller="Book" callbackfn="BookPage.success()" method="post">
+    <div class="modal-header">
+        @if (Model.Id == 0)
+        {
+            <h5 class="modal-title">Thêm mới truyện</h5>
+        }
+        else
+        {
+            <h5 class="modal-title">Cập nhật truyện</h5>
+        }
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body row">
+        <input hidden asp-for="@Model.Id" type="text" class="form-control">
+        <input hidden asp-for="@Model.Image" type="text" class="form-control">
+        @*<div class="form-group col-md-6">
+                <label asp-for="Name" class="clear-fix font-weight-semibold"></label>
+                <select asp-for="@Model.Name" asp-items="@ViewBag.Project" class="form-control form-control-sm select d-inline-block"></select>
+            </div>*@
+        <div class="form-group col-md-6">
+            <label asp-for="Name" class="clear-fix font-weight-semibold"></label>
+            <input asp-for="@Model.Name" type="text" class="form-control ">
+            <span asp-validation-for="@Model.Name" class="validation-invalid-label"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="clear-fix font-weight-semibold" asp-for="Image"></label>
+            <div class="input-group">
+                <input type="text" id="fileName" class="form-control" readonly>
+                <div class="input-group-btn">
+                    <span class="fileUpload btn btn-info">
+                        <span class="upl" id="upload">Choose file</span>
+                        <input type="file" class="upload up" accept="image/*" asp-for="ImageFile" />
+                    </span><!-- btn-orange -->
+                </div><!-- btn -->
+            </div><!-- group -->
+            <span asp-validation-for="@Model.Image" class="validation-invalid-label"></span>
+        </div>
+        <div class="form-group col-md-12">
+            @foreach (var item in Model.Genres.Select((value, i) => new { i, value }))
+            {
+                var value = item.value;
+                var index = item.i;
+                <label class="checkbox-inline ">
+                    <input hidden asp-for="Genres[index].Id" />
+                    <input type="checkbox" class="form-check-input-styled" asp-for="Genres[index].IsCheck">
+                    @value.Name
+                </label>
+            }
+        </div>
+        <div class="form-group col-md-12">
+            <label asp-for="Description" class="clear-fix font-weight-semibold"></label>
+            <textarea asp-for="@Model.Description" rows="4" class="form-control"></textarea>
+            <span asp-validation-for="@Model.Description" class="validation-invalid-label"></span>
+        </div>
+
+
+        @if (Model.Id != 0)
+        {
+            <div class="form-group col-md-6">
+                <label asp-for="Status" class="clear-fix font-weight-semibold"></label>
+                <select asp-for="@Model.Status" class="form-control form-control-sm select d-inline-block" asp-items="Html.GetEnumSelectList<EStatusBook>()" style="height:36px;"></select>
+            </div>
+        }
+    </div>
+    <div class="modal-footer" style="position: relative">
+        @if (Model.Id == 0)
+        {
+
+            @*<a href="#" onclick="BookPage.DisplayEditForm(0)" class="btn btn-sm btn-light"> Hủy <i class="fa fa-close ml-1"></i></a>*@
+            @*<button hidden onclick="checkImage()" style="margin-right:0" type="button" class="btn btn-success ml-1 btn-sm"> Save <i class="icon-checkmark ml-1"></i></button>*@
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-light btn-sm text-capitalize col-md-auto">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            <button type="button" onclick="BookPage.submit()" class="btn btn-success ml-1 btn-sm submitFormBook"> Thêm mới <i class="fa fa-check ml-1"></i></button>
+        }
+        else
+        {
+            @*<a href="#" onclick="BookPage.DisplayEditForm(0)" class="btn btn-sm btn-light"> Cancel <i class="fa fa-close ml-1"></i></a>*@
+            @*<button hidden type="button" onclick="checkImage()" style="margin-right:0" class="btn btn-success ml-1 btn-sm "> Save changes <i class="icon-checkmark ml-1"></i></button>*@
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-light btn-sm text-capitalize col-md-auto">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            <button type="button" onclick="BookPage.submit()" class="btn btn-success ml-1 btn-sm submitFormBook"> Cập nhật <i class="fa fa-check ml-1"></i></button>
+        }
+    </div>
+</form>
+
+
+<script>
+    $('.form-check-input-styled').uniform();
+    BookPage.validate();
+</script>

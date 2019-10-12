@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[Chapter]
+(
+	[Id] CHAR(32) NOT NULL PRIMARY KEY,
+	[Number] INT NOT NULL,
+	[Name] NVARCHAR(250) NOT NULL,	
+	[Content] NVARCHAR(Max) NOT NULL,	
+	[TimeCreate] SMALLDATETIME NOT NULL,
+	[CreateUserId] BIGINT NOT NULL,
+	[View] BIGINT NOT NULL,
+	[BookId] INT NOT NULL
+	CONSTRAINT [FK_ChapterOfBook_Book] FOREIGN KEY ([BookId]) REFERENCES [Book]([Id])
+)

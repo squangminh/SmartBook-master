@@ -1,0 +1,287 @@
+﻿@model AdwardSoft.Web.Inside.Models.UserInsertViewModel
+@using AdwardSoft.Provider.Common
+<style>
+
+    #fileLoad {
+        height: 300px;
+        max-height: 300px;
+        overflow-y: scroll;
+        margin: 25px;
+    }
+
+    .it .btn-orange {
+        background-color: blue;
+        border-color: #777 !important;
+        color: #777;
+        text-align: left;
+        width: 100%;
+    }
+
+    .it input.form-control {
+        border: none;
+        margin-bottom: 0px;
+        border-radius: 0px;
+        border-bottom: 1px solid #ddd;
+        box-shadow: none;
+    }
+
+    .it .form-control:focus {
+        border-color: #ff4d0d;
+        box-shadow: none;
+        outline: none;
+    }
+
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .fileUpload input.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+</style>
+@{ 
+    string type = "";
+    switch (Model.Type)
+    {
+
+    }
+}
+<form asp-action="Create" id="fUser" class="form-validate-jquery" enctype="multipart/form-data" asp-controller="User" callbackfn="UserSuccess()" method="post">
+    <div class="modal-header">
+        @if (Model.Id == 0)
+        {
+            <h5 class="modal-title">Thêm thành viên</h5>
+        }
+        else
+        {
+            <h5 class="modal-title">Chỉnh sửa thành viên</h5>
+        }
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body row">
+        <input asp-for="@Model.UserName" value="@Model.UserName" type="hidden" class="form-control">
+        <input asp-for="@Model.NormalizedUserName" value="@Model.NormalizedUserName" type="hidden" class="form-control">
+        <input asp-for="@Model.NormalizedEmail" value="@Model.NormalizedEmail" type="hidden" class="form-control">
+        <div class="col-md-6">
+            <label class="clear-fix font-weight-semibold">Họ và tên </label>
+            <input asp-for="@Model.FullName" style="resize:unset" type="text" class="form-control" />
+            <span asp-validation-for="@Model.FullName" class="validation-invalid-label"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="clear-fix font-weight-semibold">Số điện thoại</label>
+            <input asp-for="@Model.PhoneNumber" style="resize:unset" type="text" class="form-control" />
+            <span asp-validation-for="@Model.PhoneNumber" class="validation-invalid-label"></span>
+        </div>
+
+        @if (Model.Id > 0)
+        {
+            <input hidden asp-for="@Model.Id" type="text" class="form-control" required>
+            <div class="col-md-12 ">
+                <label class="clear-fix font-weight-semibold">Email</label>
+                <label class="clear-fix font-weight-semibold">@Model.Email</label>
+                <input hidden asp-for="@Model.Email" style="resize:unset" type="text" class="form-control" rows="4" />
+                <span asp-validation-for="Email" class="validation-invalid-label"></span>
+            </div>
+            <input asp-for="@Model.PasswordHash" value="@Model.PasswordHash" type="hidden" class="form-control">
+        }
+        else
+        {
+            <input hidden asp-for="@Model.Id" type="text" class="form-control" required>
+            <span asp-validation-for="@Model.Id" class="validation-invalid-label"></span>
+            <div class="col-md-12 ">
+                <label class="clear-fix font-weight-semibold">Email</label>
+                <input asp-for="@Model.Email" style="resize:unset" type="text" class="form-control" rows="4" />
+                <span asp-validation-for="Email" class="validation-invalid-label"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Mật khẩu</label>
+                <input asp-for="@Model.PasswordHash" id="Password" style="resize:unset" type="password" class="form-control" rows="4" />
+                <span asp-validation-for="@Model.PasswordHash" class="validation-invalid-label"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Xác nhận mật khẩu</label>
+                <input asp-for="@Model.PasswordConfirmed" id="ConfirmPassword" style="resize:unset" type="password" class="form-control" rows="4" />
+                <span asp-validation-for="@Model.PasswordConfirmed" class="validation-invalid-label"></span>
+            </div>
+        }
+        @if (Model.Id > 0)
+        {
+            <div class="col-md-12">
+                <label class="text-capitalize font-weight-semibold clear-fix">Loại thành viên : @(((EUserType)Model.Type).GetDescription())</label>
+                @*<input hidden asp-for="@Model.Type" style="resize:unset" type="text" class="form-control" rows="4" />*@
+                @*<select asp-for="@Model.Type" class="form-control select" asp-items="Html.GetEnumSelectList<EUserType>()" style="height:36px;"></select>*@
+            </div>
+            <input hidden asp-for="@Model.Type" />
+
+        }
+        else
+        {
+            <div class="col-md-12">
+                <label class="text-capitalize font-weight-semibold clear-fix">Loại thành viên </label>
+                <select asp-for="@Model.Type" class="form-control select" asp-items="Html.GetEnumSelectList<EUserType>()" style="height:36px;"></select>
+            </div>
+
+        }
+        <div class="col-md-12">
+            <label class="text-capitalize font-weight-semibold clear-fix">Biển số xe</label>
+            <input asp-for="@Model.LicensePlates" style="resize:unset" type="text" class="form-control" required />
+            <span asp-validation-for="@Model.LicensePlates" class="validation-invalid-label"></span>
+        </div>
+
+
+
+
+
+        <div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Ảnh đại diện</label>
+            <div class="input-group">
+                <input type="text" class="form-control" readonly>
+                <div class="input-group-btn">
+                    <span class="fileUpload btn btn-info" style="background-color: #1C2D59">
+                        <span class="upl" id="upload">Chọn ảnh</span>
+                        <input asp-for="FileImage" type="file" class="upload up" accept="image/*" />
+                    </span><!-- btn-orange -->
+                </div><!-- btn -->
+            </div><!-- group -->
+        </div>
+        <input hidden asp-for="@Model.Avatar" />
+        @*<div class="clear-fix col-md-12" style="display:none">
+            <label class="clear-fix font-weight-semibold">Xác thực lại email</label>
+            <div class="form-check form-check-switch form-check-switch-left">
+                <label class="form-check-label d-flex align-items-center">
+                    <input asp-for="@Model.EmailConfirmed" type="checkbox" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+                </label>
+            </div>
+        </div>
+        <div class="form-group " style="display:none">
+            <label class="clear-fix font-weight-semibold">SecurityStamp</label>
+            <input asp-for="@Model.SecurityStamp" style="resize:unset" type="text" class="form-control" rows="4" />
+            <span asp-validation-for="@Model.SecurityStamp" class="validation-invalid-label"></span>
+        </div>
+        <div class="form-group " style="display:none">
+            <label class="clear-fix font-weight-semibold">Xác thực lại số điện thoại</label>
+            <div class="form-check form-check-switch form-check-switch-left">
+                <label class="form-check-label d-flex align-items-center">
+                    <input asp-for="@Model.PhoneNumberConfirmed" type="checkbox" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+                </label>
+            </div>
+        </div>
+        <div class="form-group " style="display:none">
+            <label class="clear-fix font-weight-semibold">TwoFactorEnabled</label>
+            <div class="form-check form-check-switch form-check-switch-left">
+                <label class="form-check-label d-flex align-items-center">
+                    <input asp-for="@Model.TwoFactorEnabled" type="checkbox" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+                </label>
+            </div>
+        </div>
+        <div class="form-group " style="display:none">
+            <label class="clear-fix font-weight-semibold">LockoutEnabled</label>
+            <div class="form-check form-check-switch form-check-switch-left">
+                <label class="form-check-label d-flex align-items-center">
+                    <input asp-for="@Model.LockoutEnabled" type="checkbox" data-off-color="danger" data-on-text="True" data-off-text="False" class="form-check-input-switch">
+                </label>
+            </div>
+        </div>
+        <div class="form-group " style="display:none">
+            <label class="clear-fix font-weight-semibold">AccessFailedCount</label>
+            <input asp-for="@Model.AccessFailedCount" style="resize:unset" type="text" class="form-control" rows="4" />
+            <span asp-validation-for="@Model.AccessFailedCount" class="validation-invalid-label"></span>
+        </div>*@
+
+    </div>
+    <div class="modal-footer">
+
+        @if (Model.Id == 0)
+        {
+
+            <a href="#" class="btn btn-light ml-1 btn-sm text-capitalize" data-dismiss="modal" aria-label="Close">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            @*<button hidden type="submit" id="submitFormUser" class="btn btn-success ml-1 btn-sm submitFormUser">Thêm mới <i class="icon-checkmark ml-1"></i></button>*@
+            <button type="button" onclick="checkValidate();" class="btn btn-maven ml-1 btn-sm submitFormUser">Thêm mới <i class="fa fa-check ml-1"></i></button>
+        }
+        else
+        {
+
+            <a href="#" class="btn btn-light ml-1 btn-sm text-capitalize" data-dismiss="modal" aria-label="Close">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            @*<button hidden type="submit" id="submitFormUser" class="btn btn-success ml-1 btn-sm submitFormUser">Cập nhật <i class="icon-checkmark ml-1"></i></button>*@
+            <button type="button" onclick="checkValidate();" class="btn btn-maven btn-maven ml-1 btn-sm submitFormUser">Cập nhật <i class="fa fa-check ml-1"></i></button>
+        }
+
+    </div>
+</form>
+@{await Html.RenderPartialAsync("_ValidationScripts");}
+<script>
+    $(function () {
+        setTimeout(rebindValidation, 500);
+        if ($("#Type").val() != "3" && $("#Type").val() != "4") {
+            $($("#LicensePlates").parent()[0]).hide();
+        }
+        $('.select-search').select2();
+        $('.form-check-input-switch').bootstrapSwitch();
+        $('.select').select2({
+            minimumResultsForSearch: Infinity
+        });
+        $("#FileImage").on("change", function (e) {
+            var names = [];
+            var length = $(this).get(0).files.length;
+            for (var i = 0; i < $(this).get(0).files.length; ++i) {
+                names.push($(this).get(0).files[i].name);
+            }
+            $(this).parents(".input-group-btn").prev().val(names[0])
+        });
+    })
+
+    $(document).on("change", "#Type", function (e) {
+        if ($("#Type").val() === "3" || $("#Type").val() === "4") {
+            $($("#LicensePlates").parent()[0]).show();
+        } else {
+            $($("#LicensePlates").parent()[0]).hide();
+        }
+        setTimeout(rebindValidation, 500);
+    });
+
+    function checkValidate() {
+        if ($("#fUser").valid()) {
+            if (@Model.Id == 0)
+                $("#fUser").submit();
+            else {
+                $.ajax({
+                    url: "/User/Update",
+                    method: "POST",
+                    data: new FormData($('#fUser').get(0)),//$("#_Form").serializeArray(),
+                    displaysetings: {
+                        success: true,
+                    },
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.response !== null) {
+                            if (response.response.avatar !== null) {
+                                $("li.dropdown-user a img").attr("src", "/upload/Images/Avatar/" + response.response.avatar);
+                                $(".sidebar-user img").attr("src", "/upload/Images/Avatar/" + response.response.avatar);
+                            }
+                            $(".sidebar-user .media-body .media-title").html(response.response.fullname);
+                            $("li.dropdown-user a span").html(response.response.fullname);
+                        }
+                        location.reload(true);
+                    }
+                });
+            }
+        }
+    };
+
+    //$(document).ready(function () {
+    //    setTimeout(rebindValidation, 500);
+    //});
+
+</script>

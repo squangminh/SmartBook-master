@@ -1,0 +1,35 @@
+﻿.ads-search {
+    padding: 0.5rem !important;
+    
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    cursor: pointer;
+    width: 100%;
+    margin: 0 5px 5px auto;
+}
+
+    .ads-search .ads-search-title {
+        background: #fafafa;
+        background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+        background: -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+        background: linear-gradient(top, #fafafa 0%, #eee 100%);
+        padding: .3125rem .75rem;
+        border-radius: 3px;
+    }
+
+.ads-search-value{
+    width: 100%;
+    padding-left: 2rem;
+}
+
+.ads-search .ads-icon-search {
+    position: absolute;
+    left: 1.5rem;
+    top: 0.75rem;
+    font-size: .75rem;
+    opacity: .5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

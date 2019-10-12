@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewData["Title"] = "Phân quyền";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-5">
+        <div class="card" id="formPermission">
+        </div>
+    </div>
+    <div class="col-7">
+        <div class="card">
+            <div class="card-header header-elements-inline">
+                <h5 class="card-title">Danh sách quyền</h5>
+            </div>
+            <div class="card-body">
+                <table id="permissionTable" class="table datatable-save-state" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Chi tiết quyền</th>
+                            <th>Controller</th>
+                            <th>Action</th>                         
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var rebindValidation = function () {
+            $('form').each(function (i, f) {
+                $form = $(f);
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse($form);
+            });
+        }
+
+        $('.select').select2({
+            minimumResultsForSearch: Infinity
+        });
+        function loadFindId(id) {
+                $.ajax({
+                    url: "@Url.Action("_PermissionForm", "Permission")",
+                    method: "GET",
+                    data: { "id": id },
+                    success: function (data) {
+                        $("#formPermission").empty();
+                        $("#formPermission").html(data);
+                        $('.select').select2({
+                            minimumResultsForSearch: Infinity
+                        });
+                        $('.form-check-input-switch').bootstrapSwitch();
+                        setTimeout(rebindValidation, 500);
+                    }
+                });
+        }
+
+        
+
+        $(document).ready(function () {
+            var permissionAction = $.templates("#permissionAction");
+            var $permissionTable = $("#permissionTable").DataTable({
+                processing: true,
+                responsive: true,
+
+                ajax: function (data, callback, settings) {
+                    $.ajax({
+                        url: "@Url.Action("Read", "Permission")",
+                        method: "GET",
+                        success: function (response) {
+                            callback({ data: response });
+                        }
+                    });
+                },
+                pageLength: 5,
+                paging: true,
+                cache: false,
+                lengthChange: false,
+                filter: false,
+                search: false,
+                columns: [
+                    { "data": "description" },
+                    { "data": "controllerName" },
+                    { "data": "actionName" },               
+                    {
+                        data: { id: "id" },
+                        "render": function (data, type, row) {
+                            return (permissionAction.render({ data: data }));;
+                        }
+                    },
+                ],
+                language: {
+                    info: "<span style='padding-left:2%;'>Trang _PAGE_ trên _PAGES_</span>",
+                    paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' },
+                    processing: "",
+                    infoEmpty: "",
+                    emptyTable: "không có dữ liệu"
+                }
+            });
+
+
+
+            loadFindId("");
+        });
+
+        var PermissionSuccess = function () {
+            $('#permissionTable').DataTable().ajax.reload();
+        }
+    </script>
+    <script id="permissionAction" type="text/x-jsrender">
+        <div class="list-icons">
+            <a onclick="loadFindId('{{:data.id}}')" class="list-icons-item"><i class="icon-pencil7 "></i></a>
+            <a href="#" class="list-icons-item"><i data-action="/Permission/Delete" callbackfn="PermissionSuccess()" class="icon-trash remove-item" data-params='{"id":"{{:data.id}}"}'></i></a>
+        </div>
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿<script>
+        $(document).ready(function () {
+
+            $.ajax({
+                 url: '@Url.Action("_MenuForm", "Module")',
+                 method: "POST",
+                success: function (data) {
+                    var parrent = data.filter(function (e) { return e.id == e.parentId });
+
+                    for (let i = 0; i < parrent.length; i++) {
+                        var li = $('<li/>', {
+                            class: 'nav-item',
+                        })
+                        var child = data.filter(function (e) { return e.id != parrent[i].id && parrent[i].id == e.parentId });
+                        if (child.length > 0) {
+                            var a = $('<a/>', {
+                                href: '#',
+                                class: 'nav-link',
+
+                            }).appendTo(li);
+                            $("<i/>", { class: parrent[i].className }).appendTo(a);
+                            $("<span/>", { text: parrent[i].title }).appendTo(a);
+                            var ul = $('<ul/>', {
+                                class: 'nav nav-group-sub',
+                            }).appendTo(li);
+                            for (let j = 0; j < child.length; j++) {
+                                var liS = $('<li/>', {
+                                    class: 'nav-item',
+                                }).appendTo(ul)
+                                var aS = $('<a/>', {
+                                    class: 'nav-link',
+                                    href: "/" +child[j].link
+                                }).appendTo(liS);
+                                $("<i/>", { class: child[j].className }).appendTo(aS);
+                                $("<span/>", { text: child[j].title }).appendTo(aS);
+                            }
+                        }
+                        else {
+                            var a = $('<a/>', {
+                                class: 'nav-link',
+                                href: "/" +parrent[i].link
+                            }).appendTo(li);
+                            $("<i/>", { class: parrent[i].className }).appendTo(a);
+                            $("<span/>", { text : parrent[i].title }).appendTo(a);
+                        }
+                        $("#_MenuLayout").append(li);
+                    }
+                 }
+            });
+
+            $(document).on('click','a.nav-link', function () {
+                if ($(this).attr("href") == "#") {
+                    if ($(this).parents("li").find("ul").is(":visible")) {
+                        $(this).parents("li").removeClass("nav-item-open")
+                        $(this).parents("li").find("ul").hide();
+                    }
+                    else {
+                        $(this).parents("li").addClass("nav-item-open")
+                        $(this).parents("li").find("ul").show();
+                    }
+                }
+            })
+    })
+</script>
+

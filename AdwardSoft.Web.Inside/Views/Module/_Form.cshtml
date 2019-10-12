@@ -1,0 +1,119 @@
+﻿@model AdwardSoft.Web.Inside.Models.ModuleViewModel
+<form class="form-validate-jquery form-content" id="@("_FormView-" + Model.Id)" callbackfn="moduleSuccess()">
+    @if (Model.Id == 0)
+    {
+        <div class="clear-fix">
+            <label class="font-weight-semibold">Tiêu đề</label>
+            <input type="text" class="form-control" asp-for="Title" value="@Model.Title" />
+            <span asp-validation-for="@Model.Title" class="validation-invalid-label"></span>
+        </div>
+        <div class="clear-fix">
+            <label class="font-weight-semibold">Đường dẫn</label>
+            <input type="text" class="form-control" asp-for="Link" value="@Model.Link" />
+            <span asp-validation-for="@Model.Link" class="validation-invalid-label"></span>
+        </div>
+        <div class="clear-fix">
+            <label class="font-weight-semibold">Tên class</label>
+            <input type="text" class="form-control" asp-for="ClassName" value="@Model.ClassName" />
+            <span asp-validation-for="@Model.ClassName" class="validation-invalid-label"></span>
+        </div>
+        <div class="clear-fix">
+            <label class="font-weight-semibold">Tên controller</label>
+            <input type="text" class="form-control" asp-for="ControllerName" value="@Model.ControllerName" />
+            <span asp-validation-for="@Model.ControllerName" class="validation-invalid-label"></span>
+        </div>
+        <div class="clear-fix">
+            <label class="font-weight-semibold">Thuộc</label>
+            @*<div class="input-select" id="select">
+                    <div class="select-span">
+                        <input type="hidden" class="input-select" />
+                        <span class="select-title">-- Chọn --</span>
+                    </div>
+                    <div class="select-input-table">
+                        <div class="select-input">
+                            <span class="select-input-search">
+                                <input type="search" />
+                            </span>
+                            <span class="select-input-list-item">
+                                <ul class="select-input-list">
+                                    <li class="select-input-item" data-id="1"><span>test1</span></li>
+                                    <li class="select-input-item" data-id="2">test1</li>
+                                    <li class="select-input-item" data-id="3">test1</li>
+                                    <li class="select-input-item" data-id="4">test1</li>
+                                    <li class="select-input-item" data-id="5">test1</li>
+                                    <li class="select-input-item" data-id="6">test1</li>
+                                    <li class="select-input-item" data-id="7">test1</li>
+                                    <li class="select-input-item" data-id="8">test1</li>
+                                    <li class="select-input-item" data-id="9">test1</li>
+                                    <li class="select-input-item" data-id="10">test1</li>
+                                    <li class="select-input-item" data-id="11">test1</li>
+                                    <li class="select-input-item" data-id="12">test1</li>
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>*@
+            <ads-select ads-data="@Model.ListModule" asp-for="ParentId"></ads-select>
+            @*<select class="form-control select-search" asp-for="ParentId" asp-items="@(new SelectList(Model.ListModule,"Id","Title"))">
+                    <option value="0">--Chọn--</option>
+                </select>*@
+            <span asp-validation-for="@Model.ParentId" class="validation-invalid-label"></span>
+        </div>
+        <div class="clear-fix"></div>
+        <div class="d-flex justify-content-end align-items-center">
+            <a href="#" onclick="loadFindId(0)" class="btn btn-light ml-1 btn-sm">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+            <button type="button" onclick="Submit('Create', @Model.Id)" style="margin-right:0" class="btn btn-success ml-1 btn-sm">Thêm mới <i class="fa fa-check ml-1"></i></button>
+        </div>
+    }
+    else
+    {
+        <div class="row" style="margin: 0 1.375rem">
+            <input asp-for="Id" type="hidden" value="@Model.Id">
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Tiêu đề</label>
+                <input type="text" class="form-control" asp-for="Title" value="@Model.Title" />
+                <span asp-validation-for="@Model.Title" class="validation-invalid-label"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Đường dẫn</label>
+                <input type="text" class="form-control" asp-for="Link" value="@Model.Link" />
+                <span asp-validation-for="@Model.Link" class="validation-invalid-label"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Tên class</label>
+                <input type="text" class="form-control" asp-for="ClassName" value="@Model.ClassName" />
+                <span asp-validation-for="@Model.ClassName" class="validation-invalid-label"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="clear-fix font-weight-semibold">Tên controller</label>
+                <input type="text" class="form-control" asp-for="ControllerName" value="@Model.ControllerName" />
+                <span asp-validation-for="@Model.ControllerName" class="validation-invalid-label"></span>
+            </div>
+            <div class="clear-fix"></div>
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a data-action="/Module/Delete" data-params='{"id": @Model.Id}' class="remove-item" callbackfn="moduleSuccess()"><i class="icon-trash"></i> Xóa</a>
+
+                    <div class="d-inline-flex">
+                        <a href="#" onclick="Collapse(@Model.Id)" class="btn btn-light ml-1 btn-sm">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+                        <button type="button" onclick="Submit('Update', @Model.Id)" style="margin-right:0" class="btn btn-success ml-1 btn-sm">Cập nhật <i class="fa fa-check ml-1"></i></button>
+                    </div>
+                </div>
+                <div class="clear-fix"></div>
+            </div>
+        </div>
+    }
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $('.select').select2({
+            minimumResultsForSearch: Infinity
+        });
+        $('.select-search').select2();
+        $('.form-check-input-switch').bootstrapSwitch();
+        setTimeout(rebindValidation, 500);
+    });
+</script>

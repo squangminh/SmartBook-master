@@ -1,0 +1,42 @@
+﻿@model AdwardSoft.Web.Inside.Models.RoleUserViewModel;
+@{
+    Layout = null;
+}
+<form class="form-validate-jquery form-content" id="_Form" callbackfn="UserRoleSuccess()" asp-action="CreateOrUpdateRole" asp-controller="User" method="post">
+    <div class="modal-header">
+        <h5 class="card-title">Chỉnh sửa quyền </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body row">
+        <div class="col-md-12 form-group">
+            <label class="clear-fix font-weight-semibold">Người dùng</label>
+            <select asp-for="@Model.UserId" asp-items="@(new SelectList(Model.Users, "Id", "FullName"))" onchange="changeUser(value)" class="form-control form-control-sm select-search d-inline-block">
+                <option value="">-- Người dùng --</option>
+            </select>
+            <span asp-validation-for="@Model.UserId" class="validation-invalid-label"></span>
+        </div>
+        <div class="col-md-12">
+            <label class="clear-fix font-weight-semibold">Các quyền</label>
+            <select asp-for="@Model.RolesId" asp-items="@(new SelectList(ViewBag.Roles, "Id", "Name"))" multiple="multiple" class="form-control select-search" data-fouc"></select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" onclick="loadFindId(0)" class="btn btn-sm btn-light">Hủy bỏ <i class="fa fa-close ml-1"></i></a>
+        <button type="submit" id="New_Submit" class="btn btn-success ml-1 btn-sm submitFormFood">Cập nhật <i class="fa fa-check ml-1"></i> </button>
+
+    </div>
+</form>
+<script>
+
+
+   $('.select-search').select2();
+
+    function changeUser(value) {
+        var userId = $("#UserId").val();
+        console.log(userId);
+        loadFindId(value);
+    }
+    
+</script>
