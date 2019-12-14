@@ -17754,3 +17754,52 @@ System.NullReferenceException: Object reference not set to an instance of an obj
 ===> 2019-10-12 13:10:05.792 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[AdwardSoft.DTO.Presentation.CMS.GenreOfBook, AdwardSoft.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
 ===> 2019-10-12 13:10:05.795 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.GenreOfBookController.ReadByBookId (AdwardSoft.API.Core)" in 69.5321ms
 ===> 2019-10-12 13:10:05.795 +07:00 [Information] Request finished in 78.7614ms 200 application/x-protobuf
+===> 2019-12-14 16:19:10.920 +07:00 [Information] Starting API Core
+===> 2019-12-14 16:19:18.625 +07:00 [Information] User profile is available. Using '"C:\Users\Admin\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+===> 2019-12-14 16:19:25.940 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:4560/  0
+===> 2019-12-14 16:19:26.545 +07:00 [Information] Request finished in 611.8198ms 200 
+===> 2019-12-14 16:20:11.698 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44393/api/Genre/Read  
+===> 2019-12-14 16:20:14.933 +07:00 [Information] Successfully validated the token.
+===> 2019-12-14 16:20:14.949 +07:00 [Debug] AuthenticationScheme: "Bearer" was successfully authenticated.
+===> 2019-12-14 16:20:15.883 +07:00 [Information] Route matched with "{action = \"Read\", controller = \"Genre\"}". Executing action "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)"
+===> 2019-12-14 16:20:15.964 +07:00 [Information] Executing action method "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)" - Validation state: Valid
+===> 2019-12-14 16:20:17.124 +07:00 [Information] Executed action method "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 1155.5824ms.
+===> 2019-12-14 16:20:17.184 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[AdwardSoft.DTO.Presentation.CMS.Genre, AdwardSoft.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+===> 2019-12-14 16:20:17.456 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)" in 1562.9771ms
+===> 2019-12-14 16:20:17.471 +07:00 [Information] Request finished in 5774.1205ms 200 application/x-protobuf
+===> 2019-12-14 16:20:24.810 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44393/api/Book/ReadPagination/1/5/0/NULL  
+===> 2019-12-14 16:20:24.813 +07:00 [Information] Successfully validated the token.
+===> 2019-12-14 16:20:24.813 +07:00 [Debug] AuthenticationScheme: "Bearer" was successfully authenticated.
+===> 2019-12-14 16:20:24.865 +07:00 [Information] Route matched with "{action = \"ReadPagination\", controller = \"Book\"}". Executing action "AdwardSoft.API.Core.Controllers.BookController.ReadPagination (AdwardSoft.API.Core)"
+===> 2019-12-14 16:20:25.347 +07:00 [Information] Executing action method "AdwardSoft.API.Core.Controllers.BookController.ReadPagination (AdwardSoft.API.Core)" with arguments (["1", "5", "0", "NULL"]) - Validation state: Valid
+===> 2019-12-14 16:20:26.905 +07:00 [Information] Executed action method "AdwardSoft.API.Core.Controllers.BookController.ReadPagination (AdwardSoft.API.Core)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 1532.1579ms.
+===> 2019-12-14 16:20:26.906 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[AdwardSoft.DTO.Presentation.CMS.Book, AdwardSoft.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+===> 2019-12-14 16:20:26.926 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.BookController.ReadPagination (AdwardSoft.API.Core)" in 2060.1568ms
+===> 2019-12-14 16:20:26.926 +07:00 [Information] Request finished in 2115.9088ms 200 application/x-protobuf
+===> 2019-12-14 16:20:49.265 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44393/api/Genre/Read  
+===> 2019-12-14 16:20:49.266 +07:00 [Information] Successfully validated the token.
+===> 2019-12-14 16:20:49.266 +07:00 [Debug] AuthenticationScheme: "Bearer" was successfully authenticated.
+===> 2019-12-14 16:20:49.276 +07:00 [Information] Route matched with "{action = \"Read\", controller = \"Genre\"}". Executing action "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)"
+===> 2019-12-14 16:20:49.277 +07:00 [Information] Executing action method "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)" - Validation state: Valid
+===> 2019-12-14 16:20:49.308 +07:00 [Information] Executed action method "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 31.0539ms.
+===> 2019-12-14 16:20:49.308 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[AdwardSoft.DTO.Presentation.CMS.Genre, AdwardSoft.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+===> 2019-12-14 16:20:49.309 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.GenreController.Read (AdwardSoft.API.Core)" in 32.6456ms
+===> 2019-12-14 16:20:49.309 +07:00 [Information] Request finished in 44.4618ms 200 application/x-protobuf
+===> 2019-12-14 16:20:49.380 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44393/api/Book/ReadById?id=6  
+===> 2019-12-14 16:20:49.383 +07:00 [Information] Successfully validated the token.
+===> 2019-12-14 16:20:49.383 +07:00 [Debug] AuthenticationScheme: "Bearer" was successfully authenticated.
+===> 2019-12-14 16:20:49.397 +07:00 [Information] Route matched with "{action = \"ReadById\", controller = \"Book\"}". Executing action "AdwardSoft.API.Core.Controllers.BookController.ReadById (AdwardSoft.API.Core)"
+===> 2019-12-14 16:20:49.408 +07:00 [Information] Executing action method "AdwardSoft.API.Core.Controllers.BookController.ReadById (AdwardSoft.API.Core)" with arguments (["6"]) - Validation state: Valid
+===> 2019-12-14 16:20:49.560 +07:00 [Information] Executed action method "AdwardSoft.API.Core.Controllers.BookController.ReadById (AdwardSoft.API.Core)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 151.2681ms.
+===> 2019-12-14 16:20:49.560 +07:00 [Information] Executing ObjectResult, writing value of type '"AdwardSoft.DTO.Presentation.CMS.Book"'.
+===> 2019-12-14 16:20:49.560 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.BookController.ReadById (AdwardSoft.API.Core)" in 163.17ms
+===> 2019-12-14 16:20:49.561 +07:00 [Information] Request finished in 180.8958ms 200 application/x-protobuf
+===> 2019-12-14 16:20:49.654 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44393/api/GenreOfBook/ReadByBookId?bookId=6  
+===> 2019-12-14 16:20:49.656 +07:00 [Information] Successfully validated the token.
+===> 2019-12-14 16:20:49.656 +07:00 [Debug] AuthenticationScheme: "Bearer" was successfully authenticated.
+===> 2019-12-14 16:20:49.662 +07:00 [Information] Route matched with "{action = \"ReadByBookId\", controller = \"GenreOfBook\"}". Executing action "AdwardSoft.API.Core.Controllers.GenreOfBookController.ReadByBookId (AdwardSoft.API.Core)"
+===> 2019-12-14 16:20:49.663 +07:00 [Information] Executing action method "AdwardSoft.API.Core.Controllers.GenreOfBookController.ReadByBookId (AdwardSoft.API.Core)" with arguments (["6"]) - Validation state: Valid
+===> 2019-12-14 16:20:49.866 +07:00 [Information] Executed action method "AdwardSoft.API.Core.Controllers.GenreOfBookController.ReadByBookId (AdwardSoft.API.Core)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 203.222ms.
+===> 2019-12-14 16:20:49.866 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[AdwardSoft.DTO.Presentation.CMS.GenreOfBook, AdwardSoft.DTO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+===> 2019-12-14 16:20:49.886 +07:00 [Information] Executed action "AdwardSoft.API.Core.Controllers.GenreOfBookController.ReadByBookId (AdwardSoft.API.Core)" in 224.3202ms
+===> 2019-12-14 16:20:49.887 +07:00 [Information] Request finished in 232.2607ms 200 application/x-protobuf
